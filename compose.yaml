@@ -1,0 +1,38 @@
+services: # docker compose expects this
+ backend: # custom keyname could be anyhting
+  #image: python:latest
+  build:           # docker compose up --build
+    context: ./backend     # where are we building this file
+    dockerfile: Dockerfile   #define the dockerifle to use 
+  ports: 
+    - 8080:8000
+
+  command: uvicorn main:app --host 0.0.0.0 --port 8000
+  environment: 
+   - PORT=8000
+   - MY_PROJECT=Hello World
+  env_file:
+   - .env.sample
+  volumes: 
+    - ./backend/src:/app
+  develop:
+    watch:
+      - action: rebuild
+        path: backend/requirements.txt
+      - action: rebuild
+        path: backend/Dockerfile
+      - action: restart
+        path: backend/src
+
+ static_html: # custom keyname could be anyhting
+  #image: python:latest
+  build:           # docker compose up --build
+    context: ./static_html     # where are we building this file
+    dockerfile: static.Dockerfile   #define the dockerifle to use 
+  ports: 
+    - 8000:8000
+    - 3000:8000
+
+  command: python -m http.server 8000
+  volumes: 
+    - ./static_html/src:/app
