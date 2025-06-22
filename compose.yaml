@@ -11,10 +11,13 @@ services: # docker compose expects this
   environment: 
    - PORT=8000
    - MY_PROJECT=Hello World
+   - DATABASE_URL=postgresql+psycopg://dbuser:dbpassword@db_service:5432/mydb
   env_file:
    - .env.sample
   volumes: 
     - ./backend/src:/app
+  depends_on:
+    - db_service
   develop:
     watch:
       - action: rebuild
@@ -23,16 +26,35 @@ services: # docker compose expects this
         path: backend/Dockerfile
       - action: restart
         path: backend/src
+# DATABASE_URL=postgresql+psycopg://username:passward@dbhost:dbport/dbname
+# DATABASE_URL=postgresql+psycopg://dbuser:dbpassword@db_service:5432/mydb
+ db_service:
+   image: postgres:17.5
+   ports: 
+     - 5432:5432
+   environment:
+     - POSTGRES_USER=dbuser
+     - POSTGRES_PASSWORD=dbpassword
+     - POSTGRES_DB=mydb
+   # OR: 
+   # env_file:
+   #   - .env.sample-db
+   volumes:
+     - dc_managed_db_data:/var/lib/postgresql/data
+  
+  
+#  static_html: # custom keyname could be anyhting
+#   #image: python:latest
+#   build:           # docker compose up --build
+#     context: ./static_html     # where are we building this file
+#     dockerfile: static.Dockerfile   #define the dockerifle to use 
+#   ports: 
+#     - 8000:8000
+#     - 3000:8000
 
- static_html: # custom keyname could be anyhting
-  #image: python:latest
-  build:           # docker compose up --build
-    context: ./static_html     # where are we building this file
-    dockerfile: static.Dockerfile   #define the dockerifle to use 
-  ports: 
-    - 8000:8000
-    - 3000:8000
+#   command: python -m http.server 8000
+#   volumes: 
+#     - ./static_html/src:/app
 
-  command: python -m http.server 8000
-  volumes: 
-    - ./static_html/src:/app
+volumes:
+  dc_managed_db_data: 
