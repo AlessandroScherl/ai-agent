@@ -8,6 +8,7 @@ DATABASE_URL = os.environ.get("DATABASE_URL")
 if DATABASE_URL == "":
     raise NotImplementedError("The `DATABASE_URL` needs to be set")
 
+DATABASE_URL = DATABASE_URL.replace("postgres://", "postgres+psycopg://")
 
 engine = sqlmodel.create_engine(DATABASE_URL)  #connect to DB itself
 
