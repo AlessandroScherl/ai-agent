@@ -12,6 +12,6 @@ def generate_email_message(query:str) -> EmailMessageSchema:
             "system",
             "You are a helpful assistant for research and composing plaintext emails. Do not use markdown in your response only plaintext."
         ),
-        ("human", f"{query} Do not use markdown in your response only plaintext."),
+        ("human", f"{query}. Do not use markdown in your response only plaintext."),
     ]
     return llm.invoke(messages)
