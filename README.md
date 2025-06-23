@@ -10,3 +10,5 @@ Utilized:
 - Langchain + pydantic
 - Langgraph
 - PostgresSQL
+
+deployed on Digital Ocean with gpt-4o model from OpenAi.
