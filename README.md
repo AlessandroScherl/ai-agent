@@ -6,7 +6,7 @@ Utilized:
 
 - Python
 - Docker
-- Fastapi
+- FastaAPI
 - Langchain + pydantic
 - Langgraph
 - PostgresSQL
